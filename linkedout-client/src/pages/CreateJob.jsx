@@ -5,15 +5,26 @@ import CreatableSelect from "react-select/creatable";
 
 const CreateJob = () => {
     const [selectedOption, setSelectedOption] = useState(null);
+
     const {
         register,
         handleSubmit,
         formState: { errors },
-      } = useForm()
+      } = useForm();
+
       const onSubmit = (data) => {
         data.skills = selectedOption;
-        console.log(data);
-      }
+        // console.log(data);
+        fetch("http://localhost:3000/post-job", {
+            method: "POST",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify(data),
+        })
+        .then((res) => res.json())
+        .then((result) => {
+            console.log(result);
+        });
+      };
 
       const options = [
         {value: "JavaScript", label: "JavaScript"},
@@ -24,7 +35,7 @@ const CreateJob = () => {
         {value: "Node", label: "Node"},
         {value: "MongoDB", label: "MongoDB"},
         {value: "Redux", label: "Redux"},
-      ]
+      ];
     
   return (
     <div className='max-w-screen-2xl container mx-auto xl:px-24 px-4'>
@@ -143,7 +154,7 @@ const CreateJob = () => {
     </form>
         </div>
     </div>
-  )
-}
+  );
+};
 
-export default CreateJob
+export default CreateJob;
