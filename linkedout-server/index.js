@@ -6,12 +6,12 @@ require('dotenv').config()
 console.log(process.env.DB_USER)
 console.log(process.env.DB_PASSWORD)
 
-app.use(express.json())
+app.use(express.json());
 app.use(cors())
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@linkedout.toyv9vx.mongodb.net/?retryWrites=true&w=majority&appName=LinkedOut`;
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@linked-out-cluster.xhxd4fy.mongodb.net/?retryWrites=true&w=majority&appName=linked-out-cluster`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -42,9 +42,9 @@ async function run() {
             return res.status(404).send({
                 message: "can not insert! try again later",
                 status: false
-            })
+            });
         }
-    })
+    });
 
     // get all jobs
     app.get("/all-jobs", async(req, res) => {
@@ -52,11 +52,26 @@ async function run() {
         res.send(jobs);
     })
 
+    // get jobs by email
+    app.get("/myJobs/:email", async(req, res) => {
+      const jobs = await jobsCollections.find({postedBy : req.params.email}).toArray();
+      res.send(jobs)
+    })
+
+    // delete a job
+    app.delete("/job/:id", async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const result = await jobsCollections.deleteOne(filter);
+      res.send(result)
+    })
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
+  } catch (error) {
     // Ensures that the client will close when you finish/error
+    console.error("Error connecting to MongoDB:", error);
     await client.close();
   }
 }
