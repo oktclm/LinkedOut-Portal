@@ -17,7 +17,7 @@ const CreateJob = () => {
         // console.log(data);
         fetch("http://localhost:3000/post-job", {
             method: "POST",
-            headers: {"Content-Type" : "application/json"},
+            headers: {"content-type" : "application/json"},
             body: JSON.stringify(data),
         })
         .then((res) => res.json())
