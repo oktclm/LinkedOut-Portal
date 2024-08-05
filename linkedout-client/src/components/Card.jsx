@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 
 const Card = ({ data }) => {
   // console.log(data);
-  const {companyLogo, jobTitle, companyName, jobLocation, employmentType, minPrice,maxPrice, postingDate, description} = data;
+  const {_id, companyLogo, jobTitle, companyName, jobLocation, employmentType, minPrice,maxPrice, postingDate, description} = data;
   return (
     <div>
       <section className="card">
-        <Link to={`/`} className="flex gap-4 flex-col sm:flex-row items-start">
-          <img src={companyLogo} alt="" />
-          <div>
+        <Link to={`/job/${_id}`} className="flex gap-4 flex-col sm:flex-row items-start">
+          <img src={companyLogo} width={200} height={200} alt="" />
+          <div className="card-details">
             <h4 className="text-primary mb-1">{companyName}</h4>
             <h3 className="text-lg font-semibold mb-2">{jobTitle}</h3>
 
