@@ -12,7 +12,7 @@ const MyJobs = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`http://localhost:3000/myJobs/test@gmail.com`)
+    fetch(`http://localhost:3000/myJobs/${encodeURIComponent(searchText)}`)
     .then((res) => res.json())
     .then((data) => {
         setJobs(data);
@@ -39,11 +39,8 @@ const MyJobs = () => {
   }
 
   const handleSearch = () => {
-    const filter = jobs.filter(
-        (job) => 
-            job.jobTitle.toLowerCase().indexOf(searchText.toLowerCase()) !== -1);
-    setJobs(filter);
-    setIsLoading(false)
+       // Trigger useEffect by updating searchText
+       setSearchText(searchText);
   };
 
   const handleDelete = (id) => {
@@ -67,7 +64,7 @@ const MyJobs = () => {
         <div className='search-box p-2 text-center mb-2'>
             <input 
             onChange={(e) => setSearchText(e.target.value)}
-            type='text' name='search' id='search' className='py-2 pl-3 border focus:outline-none lg:w-6/12 mb-4 w-full'/>
+            type='email' name='search' id='search' className='py-2 pl-3 border focus:outline-none lg:w-6/12 mb-4 w-full' placeholder='Enter your email'/>
             <button className='bg-black text-white font-semibold px-8 py-2 rounded-sm mb-4' onClick={handleSearch}>Search</button>
         </div>
     </div>
@@ -89,6 +86,20 @@ const MyJobs = () => {
     </div>
 
     <div className="block w-full overflow-x-auto">
+       {/* Conditional rendering based on searchText and jobs data */}
+       {!searchText ? (
+                <div className='flex items-center justify-center h-20'>
+                  <p>Please search for your email address.</p>
+                </div>
+              ) : isLoading ? (
+                <div className='flex items-center justify-center h-20'>
+                  <p>Loading...</p>
+                </div>
+              ) : jobs.length === 0 ? (
+                <div className='flex items-center justify-center h-20'>
+                  <p>No jobs found.</p>
+                </div>
+              ) : (
       <table className="items-center bg-transparent w-full border-collapse ">
         <thead>
           <tr>
@@ -112,9 +123,8 @@ const MyJobs = () => {
                         </th>
           </tr>
         </thead>
-
-        {
-            isLoading ? (<div className='flex items-center justify-center h-20'><p>loading...</p></div>) : (        <tbody>
+   
+               <tbody>
                 {
                     currentJobs.map((job, index) => (
                         <tr key={index}>
@@ -128,7 +138,7 @@ const MyJobs = () => {
                           {job.companyName}
                         </td>
                         <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          ${job.minPrice} - ${job.maxPrice}
+                          ${job.minPrice}k - ${job.maxPrice}k
                         </td>
                         <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                           <button><Link to={`/edit-job/${job?._id}`}>Edit</Link></button>
@@ -139,10 +149,9 @@ const MyJobs = () => {
                       </tr>
                     ))
                 }
-            </tbody>)
-        }
-
+            </tbody>
       </table>
+      )}
     </div>
   </div>
 </div>
