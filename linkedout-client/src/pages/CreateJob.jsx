@@ -127,7 +127,7 @@ const CreateJob = () => {
             <div className='lg:w-1/2 w-full'>
                 <label className='block mb-2 text-lg'>Employment Type</label>
                 <select {...register("employmentType")} className="create-job-input">
-                    <option value="">Choose your experience</option>
+                    <option value="">Choose your employment type</option>
                     <option value="Full-time">Full-time</option>
                     <option value="Part-time">Part-time</option>
                     <option value="Temporary">Temporary</option>
